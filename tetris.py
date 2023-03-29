@@ -115,7 +115,7 @@ def main():
 
 class Piece:
     def __init__(self, x, y):
-        pieceRandomIndex = random.choice([0, len(PIECES) - 1])
+        pieceRandomIndex = random.randint(0, len(PIECES) - 1)
         self.x = x
         self.y = y
         self.index = pieceRandomIndex
@@ -126,7 +126,7 @@ class Piece:
         self.type = list(zip(*self.type[::-1]))
 
     def turn_clockwise(self):
-        self.type = list(zip(*self.typeat))[::-1]
+        self.type = list(zip(*self.type))[::-1]
 
     def move_left(self):
         self.x -= 1
