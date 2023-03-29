@@ -2,8 +2,8 @@ import pygame
 import random
 
 # Screen config
-WIDTH_SCREEN = 600
-HEIGHT_SCREEN = 800
+WIDTH_SCREEN = 1200
+HEIGHT_SCREEN = 1600
 
 # Code colors RGB
 WHITE = (255, 255, 255)
@@ -51,7 +51,7 @@ def main():
     pygame.display.set_caption('Tetris')
 
     # TODO update music
-    pygame.mixer.music.load('resources/soundtrack.mp3') 
+    pygame.mixer.music.load('resources/level1.mp3') 
     pygame.mixer.music.play(-1)
     clock = pygame.time.Clock()
     actual_piece = Piece(3, 0)
@@ -78,7 +78,7 @@ def main():
                     actual_piece.move_down()
                     if colision(actual_piece, board):
                         actual_piece.move_up()
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_SPACE:
                     actual_piece.turn()
                     if colision(actual_piece, board):
                         actual_piece.turn_clockwise()
@@ -88,11 +88,9 @@ def main():
         print(actual_piece.y)
         if colision(actual_piece, board):
             actual_piece.move_up()
-            
-            # TODO add method
             add_piece_to_board(actual_piece, board)
 
-            delete_lines(board)
+            board = delete_filled_lines(board)
             next_piece = Piece(3, 0)
             actual_piece = next_piece
             
@@ -117,16 +115,18 @@ def main():
 
 class Piece:
     def __init__(self, x, y):
+        pieceRandomIndex = random.choice([0, len(PIECES) - 1])
         self.x = x
         self.y = y
-        self.type = random.choice(PIECES)
-        self.rotation = 0
+        self.index = pieceRandomIndex
+        self.type = PIECES[pieceRandomIndex]
+        self.rotation = 1
 
     def turn(self):
-        self.rotation = (self.rotation + 1) % len(self.tipo)
+        self.type = list(zip(*self.type[::-1]))
 
     def turn_clockwise(self):
-        self.rotation = (self.rotation - 1) % len(self.tipo)
+        self.type = list(zip(*self.typeat))[::-1]
 
     def move_left(self):
         self.x -= 1
@@ -160,7 +160,7 @@ def draw_board(board, screen):
 
 
 def draw_piece(piece, screen):
-    color = COLORS[PIECES.index(piece.type)]
+    color = COLORS[piece.index + 1]
     for row in range(len(piece.type)):
         for column in range(len(piece.type[row])):
             if piece.type[row][column] != 0:
@@ -174,18 +174,38 @@ def colision(piece, board):
                 x = piece.x + column
                 y = piece.y + row
                 if x < 0 or x >= 10 or y >= 20 or board[y][x] != 0:
-                    print("colision")
                     return True
 
 def add_piece_to_board(piece, board):
     for row in range(len(piece.type)):
         for column in range(len(piece.type[row])):
             if piece.type[row][column] != 0:
-                board[piece.y + row][piece.x + column] = PIECES.index(piece.type)
+                board[piece.y + row][piece.x + column] = piece.index + 1
 
 
     # TODO            
-def delete_lines(board):
+def delete_filled_lines(board):
+    empty_board = create_board()
+
+    not_fully_rows = []
+    rowActualBoard = len(board) - 1
+    rowEmptyBoard = len(empty_board) - 1
+   
+    for row in range(len(board) - 1):
+        rowFilled = True
+        for column in range(len(board[row])):
+            if board[rowActualBoard][column] == 0:
+                rowFilled = False
+        print("column not empty")
+        if (not rowFilled) :
+            for column in range(len(board[row])):
+                empty_board[rowEmptyBoard][column] = board[rowActualBoard][column]
+            rowEmptyBoard -= 1
+        rowActualBoard -= 1
+
+    board = empty_board
+    return board
+
     # missing implementation
 
     print("missing implementation")
