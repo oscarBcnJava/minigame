@@ -85,15 +85,17 @@ def main():
 
 
         actual_piece.move_down()
+        print(actual_piece.y)
         if colision(actual_piece, board):
             actual_piece.move_up()
             
             # TODO add method
-            # add_piece_to_board(actual_piece, board)
+            add_piece_to_board(actual_piece, board)
 
             delete_lines(board)
-            actual_piece = next_piece
             next_piece = Piece(3, 0)
+            actual_piece = next_piece
+            
             if colision(actual_piece, board):
                 pygame.quit()
                 quit()
@@ -172,7 +174,15 @@ def colision(piece, board):
                 x = piece.x + column
                 y = piece.y + row
                 if x < 0 or x >= 10 or y >= 20 or board[y][x] != 0:
+                    print("colision")
                     return True
+
+def add_piece_to_board(piece, board):
+    for row in range(len(piece.type)):
+        for column in range(len(piece.type[row])):
+            if piece.type[row][column] != 0:
+                board[piece.y + row][piece.x + column] = PIECES.index(piece.type)
+
 
     # TODO            
 def delete_lines(board):
