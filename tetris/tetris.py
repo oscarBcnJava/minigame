@@ -25,7 +25,7 @@ COLORS = [WHITE, BLACK, RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN]
 FPS = 60
 START_LEVEL = 1
 MAX_LEVEL = 100
-START_SPEED = 10
+START_SPEED = 4
 INCREMENT_SPEED = 1
 
 
@@ -41,9 +41,8 @@ def main():
     screen = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
     pygame.display.set_caption('Tetris')
 
-    # TODO update music
-    # pygame.mixer.music.load('./sound/level1.mp3')
-    # pygame.mixer.music.play(-1)
+    pygame.mixer.music.load('./sound/level1.mp3')
+    pygame.mixer.music.play(-1)
     clock = pygame.time.Clock()
 
     actual_piece = Piece(3, 0)
@@ -103,7 +102,6 @@ def score(screen, font, score):
 
 def create_board():
     board = [[0 for _ in range(10)] for _ in range(20)]
-    # board += [[1 for _ in range(10)]]
     return board
 
 
@@ -157,22 +155,18 @@ def add_piece_to_board(piece, board):
             if piece.type[row][column] != 0:
                 board[piece.y + row][piece.x + column] = piece.index + 1
 
-    # TODO
-
 
 def delete_filled_lines(board, score):
     lines_deleted = 0
     for row in range(len(board) - 1, 0, -1):
         row_items_not_zero = 0
         row_length = len(board[row])
-        print(board[row])
         for column in range(row_length):
             if board[row][column] != 0:
                 row_items_not_zero += 1
                 if row_items_not_zero == row_length:
                     board.pop(row)
                     board.insert(0, [0]* row_length)
-                    print(board)
                     lines_deleted += 1
                     score.increase_score()
 if __name__ == "__main__":
