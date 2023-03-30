@@ -32,6 +32,8 @@ INCREMENT_SPEED = 1
 def main():
     font_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"fonts","Marlboro.ttf")
     font_size = 5
+    pygame.mixer.init()
+    line_sound = pygame.mixer.Sound('sounds/laser.wav')
     pygame.freetype.init()
     score_font = pygame.freetype.Font(font_path, font_size)
     game_score = Score(0, 0)
@@ -74,7 +76,7 @@ def main():
             actual_piece.move_down()
         else:
             add_piece_to_board(actual_piece, board)
-            delete_filled_lines(board, game_score)
+            delete_filled_lines(board, game_score, line_sound)
             next_piece = Piece(3, 0)
             actual_piece = next_piece
 
@@ -156,7 +158,7 @@ def add_piece_to_board(piece, board):
                 board[piece.y + row][piece.x + column] = piece.index + 1
 
 
-def delete_filled_lines(board, score):
+def delete_filled_lines(board, score, sound):
     lines_deleted = 0
     for row in range(len(board) - 1, 0, -1):
         row_items_not_zero = 0
@@ -169,5 +171,6 @@ def delete_filled_lines(board, score):
                     board.insert(0, [0]* row_length)
                     lines_deleted += 1
                     score.increase_score()
+                    sound.play()    
 if __name__ == "__main__":
     main()
