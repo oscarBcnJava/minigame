@@ -107,8 +107,13 @@ we should have installed Python3, Pygame and Pymenu
    git clone https://github.com/oscarBcnJava/minigame.git
    ```
 2. Install Python3, Pygame and Pymenu
+  ```sh
+     python3 -m pip install -U pygame --user
+     python3 -m pip install pygame-menu
+   ```
 
-3. Run Tetris
+
+3. Start minigame
    ```sh
      python3 minigame.py
    ```

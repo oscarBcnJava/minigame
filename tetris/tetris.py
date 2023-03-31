@@ -162,7 +162,8 @@ def add_piece_to_board(piece, board):
 
 
 def delete_filled_lines(board, score, sound):
-    lines_deleted = 0
+    filled_lines = []
+    
     for row in range(len(board) - 1, 0, -1):
         row_items_not_zero = 0
         row_length = len(board[row])
@@ -170,10 +171,17 @@ def delete_filled_lines(board, score, sound):
             if board[row][column] != 0:
                 row_items_not_zero += 1
                 if row_items_not_zero == row_length:
-                    board.pop(row)
-                    board.insert(0, [0]* row_length)
-                    lines_deleted += 1
-                    score.increase_score()
-                    sound.play()    
+                    filled_lines.append(row);
+
+    lines_deleted = 0
+    for filled in filled_lines:
+        lines_deleted += 1
+        board.pop(filled)
+        score.increase_score(lines_deleted)
+        sound.play()  
+    
+    for filled in filled_lines:
+        board.insert(0, [0]* row_length)
+
 if __name__ == "__main__":
     main()
