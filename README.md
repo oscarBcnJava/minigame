@@ -23,7 +23,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/oscarBcnJava/minigame">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">MiniGame</h3>
@@ -98,11 +98,7 @@ This project uses Python3
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+we should have installed Python3, Pygame and Pymenu
 
 ### Installation
 
@@ -110,12 +106,11 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/oscarBcnJava/minigame.git
    ```
-2. Install Python
+2. Install Python3, Pygame and Pymenu
 
 3. Run Tetris
    ```sh
-     cd tetris
-     python3 tetris.py
+     python3 minigame.py
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

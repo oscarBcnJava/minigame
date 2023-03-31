@@ -2,8 +2,8 @@ import pygame
 import sys
 import os
 import pygame.freetype
-from classes.piece import Piece
-from classes.score import Score
+from tetris.classes.piece import Piece
+from tetris.classes.score import Score
 
 # Screen config
 WIDTH_SCREEN = 1200
@@ -29,11 +29,14 @@ START_SPEED = 4
 INCREMENT_SPEED = 1
 
 
+def start(): 
+    main()
+
 def main():
     font_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"fonts","Marlboro.ttf")
     font_size = 5
     pygame.mixer.init()
-    line_sound = pygame.mixer.Sound('sounds/laser.wav')
+    line_sound = pygame.mixer.Sound('tetris/sounds/laser.wav')
     pygame.freetype.init()
     score_font = pygame.freetype.Font(font_path, font_size)
     game_score = Score(0, 0)
@@ -43,7 +46,7 @@ def main():
     screen = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
     pygame.display.set_caption('Tetris')
 
-    pygame.mixer.music.load('./sound/level1.mp3')
+    pygame.mixer.music.load('tetris/sounds/level3.mp3')
     pygame.mixer.music.play(-1)
     clock = pygame.time.Clock()
 
