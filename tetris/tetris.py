@@ -10,7 +10,7 @@ WIDTH_SCREEN = 1200
 HEIGHT_SCREEN = 1600
 
 # Code colors RGB
-BACKGROUND_COLOR = (255, 255, 255)
+BACKGROUND_COLOR = (225, 240, 229)
 GRID_COLOR = (0, 0, 0)
 T_COLOR = (160,0,240)
 S_COLOR = (0,240,0)
@@ -34,6 +34,7 @@ def start():
     main()
 
 def main():
+   
     font_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"fonts","Marlboro.ttf")
     font_size = 5
     pygame.mixer.init()
@@ -48,6 +49,9 @@ def main():
     pygame.init()
    
     screen = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
+    background_image = pygame.image.load("tetris/images/background-2.jpg").convert()
+    background_image = pygame.transform.smoothscale(background_image, screen.get_size())
+
     pygame.display.set_caption('Tetris')
 
     pygame.mixer.music.load('tetris/sounds/level3.mp3')
@@ -95,8 +99,10 @@ def main():
         speed = START_SPEED + level * INCREMENT_SPEED
 
         screen.fill(BACKGROUND_COLOR)
+        screen.blit(background_image, dest = (0, 0 , 1, 1))
         draw_board(board, screen)
         draw_piece(actual_piece, screen, actual_piece.x, actual_piece.y)
+        
 
         draw_piece(next_piece, screen, 12, 2)
 
@@ -105,7 +111,7 @@ def main():
             quit()
         score(screen, score_font, game_score.score)
 
-        pygame.display.update()
+        pygame.display.flip()
 
         clock.tick(speed)
 
@@ -117,22 +123,24 @@ def create_board():
     board = [[0 for _ in range(10)] for _ in range(20)]
     return board
 
-def draw_rect(x, y, color, screen):
-    pygame.draw.rect(screen, color, (x * 40, (y * 40) + 120, 40, 40))
-    pygame.draw.rect(screen, GRID_COLOR, (x * 40,  (y * 40) + 120, 40, 40), 1)
+def draw_rect(x, y, color, screen, border):
+    pygame.draw.rect(screen, color, (300 + x * 40, (y * 40) + 120, 40, 40))
+    pygame.draw.rect(screen, GRID_COLOR, (300 + x * 40,  (y * 40) + 120, 40, 40), border)
 
 def draw_board(board, screen):
     for row in range(len(board) - 1):
         for column in range(len(board[row])):
             color = COLORS[board[row][column]]
-            draw_rect(column, row, color, screen)
+            border = 1
+            if color == BACKGROUND_COLOR: border = -1
+            draw_rect(column, row, color, screen, border)
 
 def draw_piece(piece, screen, x, y):
     color = COLORS[piece.index + 1]
     for row in range(len(piece.type)):
         for column in range(len(piece.type[row])):
             if piece.type[row][column] != 0:
-                draw_rect(x + column, y + row, color, screen)
+                draw_rect(x + column, y + row, color, screen, 1)
 
 def isMovementPossible(piece, board, nextX, nextY, rotate=False):
     pieceType = piece.type
@@ -148,7 +156,7 @@ def isMovementPossible(piece, board, nextX, nextY, rotate=False):
     return True
 
 def draw_next_piece(piece, screen):
-    draw_rect(12, 2, COLORS[piece.index + 1], screen)
+    draw_rect(12, 2, COLORS[piece.index + 1], screen, 1)
 
 def add_piece_to_board(piece, board):
     for row in range(0, len(piece.type)):
