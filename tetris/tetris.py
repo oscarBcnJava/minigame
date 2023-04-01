@@ -36,13 +36,16 @@ def main():
     font_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"fonts","Marlboro.ttf")
     font_size = 5
     pygame.mixer.init()
+    global line_sound
+    global four_lines_sound
     line_sound = pygame.mixer.Sound('tetris/sounds/laser.wav')
+    four_lines_sound = pygame.mixer.Sound('tetris/sounds/laser_4_in_1.wav')
+
     pygame.freetype.init()
     score_font = pygame.freetype.Font(font_path, font_size)
     game_score = Score(0, 0)
     pygame.init()
    
-
     screen = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
     pygame.display.set_caption('Tetris')
 
@@ -79,9 +82,9 @@ def main():
             actual_piece.move_down()
         else:
             add_piece_to_board(actual_piece, board)
-            delete_filled_lines(board, game_score, line_sound)
-            next_piece = Piece(3, 0)
+            delete_filled_lines(board, game_score)
             actual_piece = next_piece
+            next_piece = Piece(3, 0)
 
         # TODO Check this. Using 1 for now
         # level = len([fila for fila in board if 0 not in fila]) // 10 + 1
@@ -92,11 +95,15 @@ def main():
 
         screen.fill(WHITE)
         draw_board(board, screen)
-        draw_piece(actual_piece, screen)
+        draw_piece(actual_piece, screen, actual_piece.x, actual_piece.y)
+
+        draw_piece(next_piece, screen, 12, 2)
+
         if (not isMovementPossible(actual_piece, board, 0, 0)):
             pygame.quit()
             quit()
         score(screen, score_font, game_score.score)
+
         pygame.display.update()
 
         clock.tick(speed)
@@ -109,11 +116,9 @@ def create_board():
     board = [[0 for _ in range(10)] for _ in range(20)]
     return board
 
-
 def draw_rect(x, y, color, screen):
     pygame.draw.rect(screen, color, (x * 40, (y * 40) + 120, 40, 40))
     pygame.draw.rect(screen, BLACK, (x * 40,  (y * 40) + 120, 40, 40), 1)
-
 
 def draw_board(board, screen):
     for row in range(len(board) - 1):
@@ -121,14 +126,12 @@ def draw_board(board, screen):
             color = COLORS[board[row][column]]
             draw_rect(column, row, color, screen)
 
-
-def draw_piece(piece, screen):
+def draw_piece(piece, screen, x, y):
     color = COLORS[piece.index + 1]
     for row in range(len(piece.type)):
         for column in range(len(piece.type[row])):
             if piece.type[row][column] != 0:
-                draw_rect(piece.x + column, piece.y + row, color, screen)
-
+                draw_rect(x + column, y + row, color, screen)
 
 def isMovementPossible(piece, board, nextX, nextY, rotate=False):
     pieceType = piece.type
@@ -143,16 +146,8 @@ def isMovementPossible(piece, board, nextX, nextY, rotate=False):
                     return False
     return True
 
-
-def colision(piece, board):
-    for row in range(len(piece.type)):
-        for column in range(len(piece.type[row])):
-            if piece.type[row][column] != 0:
-                x = piece.x + column
-                y = piece.y + row
-                if x < 0 or x >= 10 or y >= 20 or board[y][x] != 0:
-                    return True
-
+def draw_next_piece(piece, screen):
+    draw_rect(12, 2, COLORS[piece.index + 1], screen)
 
 def add_piece_to_board(piece, board):
     for row in range(0, len(piece.type)):
@@ -160,8 +155,7 @@ def add_piece_to_board(piece, board):
             if piece.type[row][column] != 0:
                 board[piece.y + row][piece.x + column] = piece.index + 1
 
-
-def delete_filled_lines(board, score, sound):
+def delete_filled_lines(board, score):
     filled_lines = []
     
     for row in range(len(board) - 1, 0, -1):
@@ -178,8 +172,12 @@ def delete_filled_lines(board, score, sound):
         lines_deleted += 1
         board.pop(filled)
         score.increase_score(lines_deleted)
-        sound.play()  
+        line_sound.play()  
     
+    if (len(filled_lines) == 4):
+        four_lines_sound.play()
+        score.increase_score(4)
+
     for filled in filled_lines:
         board.insert(0, [0]* row_length)
 
