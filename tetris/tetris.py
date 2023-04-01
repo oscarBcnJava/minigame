@@ -35,13 +35,13 @@ def start():
 
 def main():
    
-    font_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"fonts","Marlboro.ttf")
+    font_path = getResource(["fonts","Marlboro.ttf"])
     font_size = 5
     pygame.mixer.init()
     global line_sound
     global four_lines_sound
-    line_sound = pygame.mixer.Sound('tetris/sounds/laser.wav')
-    four_lines_sound = pygame.mixer.Sound('tetris/sounds/laser_4_in_1.wav')
+    line_sound = pygame.mixer.Sound(getResource(["sounds","laser.wav"]))
+    four_lines_sound = pygame.mixer.Sound(getResource(["sounds","laser_4_in_1.wav"]))
 
     pygame.freetype.init()
     score_font = pygame.freetype.Font(font_path, font_size)
@@ -49,12 +49,12 @@ def main():
     pygame.init()
    
     screen = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
-    background_image = pygame.image.load("tetris/images/background-2.jpg").convert()
+    background_image = pygame.image.load(getResource(["images","background-2.jpg"])).convert()
     background_image = pygame.transform.smoothscale(background_image, screen.get_size())
 
     pygame.display.set_caption('Tetris')
 
-    pygame.mixer.music.load('tetris/sounds/level3.mp3')
+    pygame.mixer.music.load(getResource(["sounds","level3.mp3"]))
     pygame.mixer.music.play(-1)
     clock = pygame.time.Clock()
 
@@ -189,6 +189,9 @@ def delete_filled_lines(board, score):
 
     for filled in filled_lines:
         board.insert(0, [0]* row_length)
+
+def getResource(path_elements):
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)),*path_elements)
 
 if __name__ == "__main__":
     main()
