@@ -10,16 +10,17 @@ WIDTH_SCREEN = 1200
 HEIGHT_SCREEN = 1600
 
 # Code colors RGB
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-MAGENTA = (255, 0, 255)
-CYAN = (0, 255, 255)
+BACKGROUND_COLOR = (255, 255, 255)
+GRID_COLOR = (0, 0, 0)
+T_COLOR = (160,0,240)
+S_COLOR = (0,240,0)
+Z_COLOR = (0, 255, 0)
+L_COLOR = (240,160,0)
+J_COLOR = (0,0,240)
+O_COLOR = (240,240,0)
+I_COLOR = (0,240,240)
 
-COLORS = [WHITE, BLACK, RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN]
+COLORS = [BACKGROUND_COLOR, T_COLOR, S_COLOR, Z_COLOR, L_COLOR, J_COLOR, O_COLOR, I_COLOR]
 
 # game config
 FPS = 60
@@ -93,7 +94,7 @@ def main():
             level = MAX_LEVEL
         speed = START_SPEED + level * INCREMENT_SPEED
 
-        screen.fill(WHITE)
+        screen.fill(BACKGROUND_COLOR)
         draw_board(board, screen)
         draw_piece(actual_piece, screen, actual_piece.x, actual_piece.y)
 
@@ -110,7 +111,7 @@ def main():
 
 
 def score(screen, font, score):
-    font.render_to(screen, (100, 2), "Score: " + str(score), BLACK, None, size=64)
+    font.render_to(screen, (100, 2), "Score: " + str(score), GRID_COLOR, None, size=64)
 
 def create_board():
     board = [[0 for _ in range(10)] for _ in range(20)]
@@ -118,7 +119,7 @@ def create_board():
 
 def draw_rect(x, y, color, screen):
     pygame.draw.rect(screen, color, (x * 40, (y * 40) + 120, 40, 40))
-    pygame.draw.rect(screen, BLACK, (x * 40,  (y * 40) + 120, 40, 40), 1)
+    pygame.draw.rect(screen, GRID_COLOR, (x * 40,  (y * 40) + 120, 40, 40), 1)
 
 def draw_board(board, screen):
     for row in range(len(board) - 1):
