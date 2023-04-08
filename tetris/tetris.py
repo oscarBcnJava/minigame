@@ -28,7 +28,6 @@ COLORS = [BACKGROUND_COLOR, T_COLOR, S_COLOR, Z_COLOR, L_COLOR, J_COLOR, O_COLOR
 # game config
 FPS = 60
 START_LEVEL = 1
-DELAY_TIME_MS = 1000
 
 def start(): 
     main()
@@ -41,6 +40,7 @@ def main():
     global four_lines_sound
     line_sound = pygame.mixer.Sound(getResource(["sounds","laser.wav"]))
     four_lines_sound = pygame.mixer.Sound(getResource(["sounds","laser_4_in_1.wav"]))
+    hit_floor_sound = pygame.mixer.Sound(getResource(["sounds","hit_floor.wav"]))
 
     pygame.freetype.init()
     score_font = pygame.freetype.Font(font_path, 1)
@@ -60,8 +60,10 @@ def main():
     actual_piece = Piece(3, 0)
     next_piece = Piece(3, 0)
     board = create_board()
+    auto_down = False
+    piece_sound_should_play = False
 
-    scroll = Scroll(START_LEVEL, DELAY_TIME_MS, pygame.time.get_ticks())
+    scroll = Scroll(START_LEVEL, pygame.time.get_ticks())
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -78,21 +80,30 @@ def main():
                         actual_piece.move_right()
                 if event.key == pygame.K_DOWN:
                     if (isMovementPossible(actual_piece, board, 0, 1)):
+                        auto_down = True
                         actual_piece.move_down()
                 if event.key == pygame.K_SPACE:
                     if isMovementPossible(actual_piece, board, 0, 0, True):
                         actual_piece.turn()
 
-        print(pygame.time.get_ticks())
+            if event.type == pygame.KEYUP:
+                auto_down = False
 
-        if scroll.is_allowed_scroll(pygame.time.get_ticks()):
-            if isMovementPossible(actual_piece, board, 0, 1):
+        next_movement_possible = isMovementPossible(actual_piece, board, 0, 1)
+        if not next_movement_possible and not piece_sound_should_play:
+            print("sound")
+            piece_sound_should_play = True
+            hit_floor_sound.play()
+
+        if scroll.is_allowed_scroll(pygame.time.get_ticks(), auto_down):
+            if next_movement_possible:
                 actual_piece.move_down()
             else:
-                add_piece_to_board(actual_piece, board)
+                add_piece_to_board(actual_piece, board, hit_floor_sound)
                 delete_filled_lines(board, game_info)
                 actual_piece = next_piece
                 next_piece = Piece(3, 0)
+                piece_sound_should_play = False
 
         screen.fill(BACKGROUND_COLOR)
         screen.blit(background_image, dest = (0, 0 , 1, 1))
@@ -128,14 +139,14 @@ def draw_game_board(board, screen):
 
 def draw_info_boards(screen, font, game_info):
     score_board = pygame.Rect(100,  150, 280, 210)
-    next_piece_board = pygame.Rect(820,  150, 200, 260)
+    next_piece_board = pygame.Rect(820,  150, 230, 260)
     screen.fill(pygame.color.THECOLORS['gray90'], score_board)
     screen.fill(pygame.color.THECOLORS['gray90'], next_piece_board)
     font.render_to(screen, (120, 180), "Level: " + str(game_info.level), GRID_COLOR, None, size=22)
     font.render_to(screen, (120, 220), "Score: " + str(game_info.score), GRID_COLOR, None, size=22)
     font.render_to(screen, (120, 260), "High-score: " + str(game_info.max_score), GRID_COLOR, None, size=22)
     font.render_to(screen, (120, 300), "Remaining lines: " + str(game_info.remaining_lines), GRID_COLOR, None, size=22)
-    font.render_to(screen, (870, 180), "Next", GRID_COLOR, None, size=22)
+    font.render_to(screen, (910, 180), "Next", GRID_COLOR, None, size=22)
 
 def draw_piece(piece, screen, x, y):
     color = COLORS[piece.index + 1]
@@ -160,11 +171,12 @@ def isMovementPossible(piece, board, nextX, nextY, rotate=False):
 def draw_next_piece(piece, screen):
     draw_rect(12, 2, COLORS[piece.index + 1], screen, 1)
 
-def add_piece_to_board(piece, board):
+def add_piece_to_board(piece, board, hit_floor_sound):
     for row in range(0, len(piece.type)):
         for column in range(0, len(piece.type[row])):
             if piece.type[row][column] != 0:
                 board[piece.y + row][piece.x + column] = piece.index + 1
+    
 
 def delete_filled_lines(board, score):
     filled_lines = []
@@ -183,6 +195,7 @@ def delete_filled_lines(board, score):
         lines_deleted += 1
         board.pop(filled)
         score.increase_score(lines_deleted)
+        score.decrease_remaining_lines()
         line_sound.play()  
     
     if (len(filled_lines) == 4):
