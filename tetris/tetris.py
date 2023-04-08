@@ -3,14 +3,17 @@ import sys
 import os
 import pygame.freetype
 from tetris.classes.piece import Piece
-from tetris.classes.score import Score
+from tetris.classes.game_info import GameInfo
+from tetris.classes.scroll import Scroll
 
 # Screen config
 WIDTH_SCREEN = 1200
 HEIGHT_SCREEN = 1600
+OFFSET_GAMEBOARD_LEFT = 400
+OFFSET_GAMEBOARD_TOP = 150
 
 # Code colors RGB
-BACKGROUND_COLOR = (225, 240, 229)
+BACKGROUND_COLOR = pygame.color.THECOLORS['gray69']
 GRID_COLOR = (0, 0, 0)
 T_COLOR = (160,0,240)
 S_COLOR = (0,240,0)
@@ -25,18 +28,14 @@ COLORS = [BACKGROUND_COLOR, T_COLOR, S_COLOR, Z_COLOR, L_COLOR, J_COLOR, O_COLOR
 # game config
 FPS = 60
 START_LEVEL = 1
-MAX_LEVEL = 100
-START_SPEED = 4
-INCREMENT_SPEED = 1
-
+DELAY_TIME_MS = 1000
 
 def start(): 
     main()
 
 def main():
-   
-    font_path = getResource(["fonts","Marlboro.ttf"])
-    font_size = 5
+    
+    font_path = getResource(["fonts","OldTimer.ttf"])
     pygame.mixer.init()
     global line_sound
     global four_lines_sound
@@ -44,8 +43,8 @@ def main():
     four_lines_sound = pygame.mixer.Sound(getResource(["sounds","laser_4_in_1.wav"]))
 
     pygame.freetype.init()
-    score_font = pygame.freetype.Font(font_path, font_size)
-    game_score = Score(0, 0)
+    score_font = pygame.freetype.Font(font_path, 1)
+    game_info = GameInfo(0, 0, 1)
     pygame.init()
    
     screen = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
@@ -61,15 +60,16 @@ def main():
     actual_piece = Piece(3, 0)
     next_piece = Piece(3, 0)
     board = create_board()
-    level = START_LEVEL
-    speed = START_SPEED
 
+    scroll = Scroll(START_LEVEL, DELAY_TIME_MS, pygame.time.get_ticks())
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    quit()
                 if event.key == pygame.K_LEFT:
                     if (isMovementPossible(actual_piece, board, -1, 0)):
                         actual_piece.move_left()
@@ -83,24 +83,21 @@ def main():
                     if isMovementPossible(actual_piece, board, 0, 0, True):
                         actual_piece.turn()
 
-        if isMovementPossible(actual_piece, board, 0, 1):
-            actual_piece.move_down()
-        else:
-            add_piece_to_board(actual_piece, board)
-            delete_filled_lines(board, game_score)
-            actual_piece = next_piece
-            next_piece = Piece(3, 0)
+        print(pygame.time.get_ticks())
 
-        # TODO Check this. Using 1 for now
-        # level = len([fila for fila in board if 0 not in fila]) // 10 + 1
-        level = 1
-        if level > MAX_LEVEL:
-            level = MAX_LEVEL
-        speed = START_SPEED + level * INCREMENT_SPEED
+        if scroll.is_allowed_scroll(pygame.time.get_ticks()):
+            if isMovementPossible(actual_piece, board, 0, 1):
+                actual_piece.move_down()
+            else:
+                add_piece_to_board(actual_piece, board)
+                delete_filled_lines(board, game_info)
+                actual_piece = next_piece
+                next_piece = Piece(3, 0)
 
         screen.fill(BACKGROUND_COLOR)
         screen.blit(background_image, dest = (0, 0 , 1, 1))
-        draw_board(board, screen)
+        draw_game_board(board, screen)
+        draw_info_boards(screen, score_font, game_info)
         draw_piece(actual_piece, screen, actual_piece.x, actual_piece.y)
         
 
@@ -109,31 +106,36 @@ def main():
         if (not isMovementPossible(actual_piece, board, 0, 0)):
             pygame.quit()
             quit()
-        score(screen, score_font, game_score.score)
 
         pygame.display.flip()
-
-        clock.tick(speed)
-
-
-def score(screen, font, score):
-    font.render_to(screen, (100, 2), "Score: " + str(score), GRID_COLOR, None, size=64)
+        clock.tick(FPS)  
 
 def create_board():
     board = [[0 for _ in range(10)] for _ in range(20)]
     return board
 
 def draw_rect(x, y, color, screen, border):
-    pygame.draw.rect(screen, color, (300 + x * 40, (y * 40) + 120, 40, 40))
-    pygame.draw.rect(screen, GRID_COLOR, (300 + x * 40,  (y * 40) + 120, 40, 40), border)
+    pygame.draw.rect(screen, color, (OFFSET_GAMEBOARD_LEFT + x * 40, OFFSET_GAMEBOARD_TOP + (y * 40), 40, 40))
+    pygame.draw.rect(screen, GRID_COLOR, (OFFSET_GAMEBOARD_LEFT + x * 40,  OFFSET_GAMEBOARD_TOP + (y * 40), 40, 40), border)
 
-def draw_board(board, screen):
+def draw_game_board(board, screen):
     for row in range(len(board) - 1):
         for column in range(len(board[row])):
             color = COLORS[board[row][column]]
             border = 1
             if color == BACKGROUND_COLOR: border = -1
             draw_rect(column, row, color, screen, border)
+
+def draw_info_boards(screen, font, game_info):
+    score_board = pygame.Rect(100,  150, 280, 210)
+    next_piece_board = pygame.Rect(820,  150, 200, 260)
+    screen.fill(pygame.color.THECOLORS['gray90'], score_board)
+    screen.fill(pygame.color.THECOLORS['gray90'], next_piece_board)
+    font.render_to(screen, (120, 180), "Level: " + str(game_info.level), GRID_COLOR, None, size=22)
+    font.render_to(screen, (120, 220), "Score: " + str(game_info.score), GRID_COLOR, None, size=22)
+    font.render_to(screen, (120, 260), "High-score: " + str(game_info.max_score), GRID_COLOR, None, size=22)
+    font.render_to(screen, (120, 300), "Remaining lines: " + str(game_info.remaining_lines), GRID_COLOR, None, size=22)
+    font.render_to(screen, (870, 180), "Next", GRID_COLOR, None, size=22)
 
 def draw_piece(piece, screen, x, y):
     color = COLORS[piece.index + 1]

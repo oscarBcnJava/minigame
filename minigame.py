@@ -1,7 +1,8 @@
 import pygame
 import pygame_menu
 from pygame_menu.examples import create_example_window
-from tetris.tetris import start
+from tetris.tetris import start as run_tetris
+from arkanoid.arkanoid import start as run_arkanoid
 
 WINDOW_SIZE = (640, 480)
 
@@ -15,7 +16,8 @@ def main() -> None:
                                  title = "MiniGame",
                                  width=WINDOW_SIZE[0] * 0.75)
     
-    play_menu.add.button("Tetris", start)
+    play_menu.add.button("Tetris", run_tetris)
+    play_menu.add.button("Arkanoid", run_arkanoid)
     play_menu.add.button("Quit", pygame_menu.events.EXIT)
 
     while True:
