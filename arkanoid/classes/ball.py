@@ -6,16 +6,19 @@ class Ball(Sprite):
     def __init__(self, screen, image, init_position, init_direction, speed):
         super().__init__()
         self.screen = screen
-        self.image = image
+        self.image = pygame.Surface((23,23))
         self.pos = Vec2d(init_position)
         self.prev_pos = Vec2d(self.pos)
         self.direction = Vec2d(init_direction).normalized()
         self.init_direction = init_direction
         self.speed = speed
         self.image_w, self.image_h = self.image.get_size()
-        self.rect = image.get_rect()
+        self.image.fill(pygame.color.THECOLORS["white"])
+        self.image.set_colorkey(pygame.color.THECOLORS["white"])
+        pygame.draw.circle(self.image, pygame.color.THECOLORS["yellow"], (15,15), 5)
+        self.rect = image.get_rect(center=self.pos)
         self.mask = pygame.mask.from_surface(self.image)
-    
+        
     def move(self):
         displacement = Vec2d(    
             self.direction.x * self.speed,
@@ -37,11 +40,15 @@ class Ball(Sprite):
     def blit(self):
         self.screen.blit(self.image, self.rect)
 
-    def boing(self, horizontal_hit = False, hit_percentage = 0):
+    def boing(self, horizontal_hit = False, hit_factor = 0.0):
         if horizontal_hit == True:
             self.direction.y = -self.direction.y
+            if (hit_factor != 0):
+                self.direction.x *= (hit_factor * 1.5)
+                if self.direction.x < 0 and hit_factor > 0: self.direction.x *= -1
+                elif self.direction.x > 0 and hit_factor < 0: self.direction.x *= -1
+                if self.direction.x < 0 and self.direction.x > -0.6: self.direction.x = -0.6
+                elif self.direction.x > 0 and self.direction.x < 0.6: self.direction.x = 0.6
         else:
-            self.direction.x = -self.direction.x
-                            # self.direction.rotate(-1 * self.direction.get_angle())
-   
+            self.direction.x = -self.direction.x   
 
