@@ -110,6 +110,7 @@ we should have installed Python3, Pygame and Pymenu
   ```sh
      python3 -m pip install -U pygame --user
      python3 -m pip install pygame-menu
+     python3 -m pip install shapely
    ```
 
 
