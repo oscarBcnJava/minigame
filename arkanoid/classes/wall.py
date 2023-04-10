@@ -19,7 +19,7 @@ class Wall(Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.timer = Timer(2, self.clear_balls_hit)
 
-    def boing(self):
+    def handle_collision(self):
         self.image = self.image_hit
         Wall.balls_hit.append(self)
         self.timer = Timer(0.1, self.clear_balls_hit)

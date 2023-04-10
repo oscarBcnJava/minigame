@@ -38,8 +38,6 @@ class Stick(Sprite):
                 self.direction.x = 0
 
         self.update_rect()
-
-    def blit(self):
         self.screen.blit(self.image, self.rect)
 
     # returns range -1, 1 depending if collision is on the left or on the right. 0 should be on the middle
