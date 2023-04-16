@@ -4,14 +4,15 @@ from util.vector2D import Vec2d
 from typing import Tuple
 class Stick(Sprite):
     
-    def __init__(self, screen, image, init_position, init_direction, speed):
+    def __init__(self, image, game_config):
         super().__init__()
-        self.screen = screen
+        self.stick_config = game_config.get_stick_config()
+        self.screen = game_config.screen
         self.image = image
-        self.pos = Vec2d(init_position)
-        self.prev_pos = Vec2d(self.pos)
-        self.direction = Vec2d(init_direction).normalized()
-        self.speed = speed
+        self.pos = self.stick_config["init_position"]
+        self.prev_pos = self.pos
+        self.direction = self.stick_config["init_direction"].normalized()
+        self.speed = self.stick_config["speed"]
         self.image_w, self.image_h = self.image.get_size()
         self.rect = self.update_rect()
         self.mask = pygame.mask.from_surface(self.image)

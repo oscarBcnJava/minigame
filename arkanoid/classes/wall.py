@@ -16,8 +16,25 @@ class Wall(Sprite):
         self.prev_pos = Vec2d(self.pos)
         self.image_w, self.image_h = self.image.get_size()
         self.rect = image.get_rect().move(self.pos.x, self.pos.y)
+        self.subTop = pygame.Surface.subsurface(self.image, (0,0,32,2))
+        self.subBottom = pygame.Surface.subsurface(self.image, (0,29,32,2))
         self.mask = pygame.mask.from_surface(self.image)
+        self.subLeft = pygame.Surface.subsurface(self.image, (0,3,2,28))
+        self.subRight = pygame.Surface.subsurface(self.image, (30,3,2,28))
+        self.topMask = pygame.mask.from_surface(self.subTop)
+        self.bottomMask = pygame.mask.from_surface(self.subBottom)
+        self.leftMask = pygame.mask.from_surface(self.subLeft)
+        self.rightMask = pygame.mask.from_surface(self.subRight)
+        
         self.timer = Timer(2, self.clear_balls_hit)
+        olistTop = self.topMask.outline()
+        olistBottom = self.bottomMask.outline()
+        olistLeft = self.leftMask.outline()
+        olistRight = self.rightMask.outline()
+        pygame.draw.lines(self.subTop,(200,150,150),1,olistTop)
+        pygame.draw.lines(self.subBottom,(200,150,150),2,olistBottom)
+        pygame.draw.lines(self.subLeft,(200,150,150),2,olistLeft)
+        pygame.draw.lines(self.subRight,(200,150,150),2,olistRight)
 
     def handle_collision(self):
         self.image = self.image_hit

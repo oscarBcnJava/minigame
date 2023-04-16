@@ -3,31 +3,25 @@ import pygame
 from arkanoid.classes.ball import Ball
 from arkanoid.classes.wall import Wall
 from arkanoid.classes.stick import Stick
+from arkanoid.classes.game_config import GameConfig
 from pygame.sprite import Group
 from math import atan2, degrees
-from shapely.geometry import LineString
 
-SCREEN_WIDTH = 900
-SCREEN_HEIGHT = 700
-WALL_ROWS = 20
-WALL_COLUMNS = 20
-BACKGROUND_COLOR = (0,0,0)
-FPS = 60
 
 def start():
-    global hit_wall, brick_wall_image, brick_wall_hit_image, sprite_group, ball
+    global hit_wall, brick_wall_image, brick_wall_hit_image, sprite_group, ball, gc
 
     clock = pygame.time.Clock()
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+    gc = GameConfig()
+    screen = gc.screen
 
-    ball_image = pygame.image.load(getResource(["images", "sprites", "arkanoid_ball_color.png"])).convert_alpha()
     brick_wall_image = pygame.image.load(getResource(["images", "sprites", "brick_tile.png"])).convert_alpha()
     brick_wall_hit_image = pygame.image.load(getResource(["images", "sprites", "brick_tile_hit.png"])).convert_alpha()
     hit_wall = pygame.mixer.Sound(getResource(["sounds","pickupCoin.wav"]))
     stick_image = pygame.image.load(getResource(["images", "sprites", "stick_128_32.png"])).convert_alpha()
-    ball = Ball(screen, ball_image, init_position=(190.0,490.0), init_direction=(1,0.5), speed=10)
-    stick = Stick(screen, stick_image, init_position=(188.0,580.0), init_direction=(1.0,0.0), speed=5)
+    ball = Ball(gc)
+    stick = Stick(stick_image, gc)
     sprite_group = Group()
 
     add_walls_to_group()
@@ -45,25 +39,28 @@ def start():
             if event.type == pygame.QUIT:
                 quit()
 
-        screen.fill(BACKGROUND_COLOR)
+        screen.fill(gc.BACKGROUND_COLOR)
 
         draw_wall(screen)
-        check_wall_collision(ball)
+        # collision_info = check_wall_collision(ball)
+        # if collision_info != None:
+        #     ball.move(position=collision_info[0], horizontal = collision_info[1])
         ball.move()
-        stick.move((31, (32 * (WALL_COLUMNS - 1))))
+
+        stick.move((gc.WALL_WIDTH, (gc.WALL_WIDTH * (gc.WALL_COLUMNS - 1))))
         
         pygame.display.flip()
         check_ball_stick_collision(ball, stick, screen)
-        clock.tick(60) 
+        clock.tick(gc.FPS) 
 
 def add_walls_to_group():
-    for y in range(WALL_ROWS):
-        for x in range(WALL_COLUMNS):
-            if (y == 0 or y == WALL_ROWS - 1 or x == 0 or x == WALL_COLUMNS - 1):
+    for y in range(gc.WALL_ROWS):
+        for x in range(gc.WALL_COLUMNS):
+            if (y == 0 or y == gc.WALL_ROWS - 1 or x == 0 or x == gc.WALL_COLUMNS - 1):
                 horizontal = False
-                if x == 0 or x == WALL_COLUMNS -1:
+                if x == 0 or x == gc.WALL_COLUMNS -1:
                     horizontal = True
-                wall = Wall(brick_wall_image, brick_wall_hit_image, (x * 32, y * 32), horizontal)
+                wall = Wall(brick_wall_image, brick_wall_hit_image, (x * gc.WALL_WIDTH, y * gc.WALL_WIDTH), horizontal)
                 sprite_group.add(wall)
 
 def draw_wall(screen):
@@ -71,24 +68,55 @@ def draw_wall(screen):
 
 def check_wall_collision(ball):
     sprite_collided = pygame.sprite.spritecollideany(ball, sprite_group, pygame.sprite.collide_mask)
-    if  sprite_collided != None:
-        sc_rect = sprite_collided.rect
+    if  sprite_collided != None and type(sprite_collided) == Wall:
+        # sc_rect = sprite_collided.rect
 
-        line_left_sprite_collided = LineString([(sc_rect.topleft[0], sc_rect.topleft[1]), (sc_rect.bottomleft[0], sc_rect.bottomleft[1])])
-        line_right_sprite_collided = LineString([(sc_rect.topright[0], sc_rect.topright[1]), (sc_rect.bottomright[0], sc_rect.bottomright[1])])
-        line_top_sprite_collided = LineString([(sc_rect.topleft[0], sc_rect.topleft[1]), (sc_rect.topright[0], sc_rect.topright[1])])
-        line_bottom_sprite_collided = LineString([(sc_rect.bottomleft[0], sc_rect.bottomleft[1]), (sc_rect.bottomright[0], sc_rect.bottomright[1])])
+        # line_left_sprite_collided = LineString([(sc_rect.topleft[0], sc_rect.topleft[1]), (sc_rect.bottomleft[0], sc_rect.bottomleft[1])])
+        # line_right_sprite_collided = LineString([(sc_rect.topright[0], sc_rect.topright[1]), (sc_rect.bottomright[0], sc_rect.bottomright[1])])
+        # line_top_sprite_collided = LineString([(sc_rect.topleft[0], sc_rect.topleft[1]), (sc_rect.topright[0], sc_rect.topright[1])])
+        # line_bottom_sprite_collided = LineString([(sc_rect.bottomleft[0], sc_rect.bottomleft[1]), (sc_rect.bottomright[0], sc_rect.bottomright[1])])
 
-        line_between_objects = LineString([(ball.prev_pos.x, ball.prev_pos.y), (sc_rect.centerx, sc_rect.centery)])
+        # print(line_left_sprite_collided)
+        # # line_between_objects = LineString([(ball.prev_pos.x, ball.prev_pos.y), (sc_rect.centerx, sc_rect.centery)])
+        # # 
+        # # print(f"center x: {sc_rect.centerx}, center y: {sc_rect.centery}")
+        # ball.dir_points.append((sc_rect.centerx, sc_rect.centery))
+        # line_between_objects = LineString(ball.dir_points)
+        # # line_between_objects = LineString([(ball.dir_points[0][0], ball.dir_points[0][1]),(ball.dir_points[len(ball.dir_points) - 1][0], ball.dir_points[len(ball.dir_points) - 1][1]),(ball.pos.x, ball.pos.y), (sc_rect.centerx, sc_rect.centery)])
+        # # line_between_objects = LineString(ball.dir_points)
+        # print(f"line between objects: {line_between_objects}")
+        # if line_left_sprite_collided.intersects(line_between_objects) or line_right_sprite_collided.intersects(line_between_objects):
+        #     ball.handle_collision(horizontal_collision = True)
+        #     sprite_collided.handle_collision()
+        #     print("horizontal")
+        # else:
+        #     ball.handle_collision(horizontal_collision = False)
+        #     sprite_collided.handle_collision()
+        #     print("vertical")
+        # # elif line_between_objects.intersects(line_top_sprite_collided) or line_between_objects.intersects(line_bottom_sprite_collided):
+        # #     ball.handle_collision(horizontal_collision = False)
+        # #     sprite_collided.handle_collision()
+        # #     print("vertical")
+        offset = (ball.rect.x - sprite_collided.rect.x), (ball.rect.y - sprite_collided.rect.y)
+        # col_position = sprite_collided.mask.overlap_mask(ball.mask, (0,0))
+        # print(f"collision {col_position}")
 
-        if line_left_sprite_collided.intersects(line_between_objects) or line_right_sprite_collided.intersects(line_between_objects):
-            ball.handle_collision(horizontal_collision = True)
-        elif line_between_objects.intersects(line_top_sprite_collided) or line_between_objects.intersects(line_bottom_sprite_collided):
-            ball.handle_collision(horizontal_collision = False)
-
-        sprite_collided.handle_collision()
-
-    return False
+        horizontal = True
+        if ball.mask.overlap(sprite_collided.topMask, offset) or ball.mask.overlap(sprite_collided.bottomMask, offset):
+            horizontal = False
+        elif ball.mask.overlap(sprite_collided.leftMask, offset) or ball.mask.overlap(sprite_collided.rightMask, offset):
+            horizontal = True
+            
+                                                      
+        print(f"left {ball.mask.overlap(sprite_collided.leftMask, offset)}")
+        print(f"right {ball.mask.overlap(sprite_collided.rightMask, offset)}")
+        print(f"top {ball.mask.overlap(sprite_collided.topMask, offset)}")
+        print(f"down {ball.mask.overlap(sprite_collided.bottomMask, offset)}")
+        
+        
+        ball.handle_collision(horizontal_collision = horizontal)
+        return [None , sprite_collided.horizontal]
+    return None
 
 def check_ball_stick_collision(ball, stick, screen):
     
@@ -102,6 +130,3 @@ def quit():
 
 def getResource(path_elements):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)),*path_elements)
-
-if __name__ == "__main__":
-    main()
