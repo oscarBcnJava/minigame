@@ -5,7 +5,6 @@ from arkanoid.classes.wall import Wall
 from arkanoid.classes.stick import Stick
 from arkanoid.classes.game_config import GameConfig
 from pygame.sprite import Group
-from math import atan2, degrees
 
 
 def start():
@@ -42,15 +41,12 @@ def start():
         screen.fill(gc.BACKGROUND_COLOR)
 
         draw_wall(screen)
-        # collision_info = check_wall_collision(ball)
-        # if collision_info != None:
-        #     ball.move(position=collision_info[0], horizontal = collision_info[1])
+    
         ball.move()
-
-        stick.move((gc.WALL_WIDTH, (gc.WALL_WIDTH * (gc.WALL_COLUMNS - 1))))
-        
-        pygame.display.flip()
+        stick.move()
         check_ball_stick_collision(ball, stick, screen)
+
+        pygame.display.flip()
         clock.tick(gc.FPS) 
 
 def add_walls_to_group():
@@ -119,7 +115,6 @@ def check_wall_collision(ball):
     return None
 
 def check_ball_stick_collision(ball, stick, screen):
-    
     if pygame.sprite.collide_mask(ball, stick):
         collision_factor = stick.get_collision_factor(pygame.sprite.collide_mask(stick, ball))
         ball.handle_collision(hit_factor = collision_factor)

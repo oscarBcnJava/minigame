@@ -21,7 +21,7 @@ class Ball(Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         
     def move(self, position = None, horizontal = False):
-        self.check_ball_limits()
+        self.check_screen_limits()
         if position == None:
             displacement = Vec2d(    
                 self.direction.x * self.speed,
@@ -59,7 +59,7 @@ class Ball(Sprite):
         else:
             self.direction.x = -self.direction.x
     
-    def check_ball_limits(self):
+    def check_screen_limits(self):
         rect_margin = self.gc.get_screen_limits_rect()
 
         if self.pos.x <= rect_margin.left:

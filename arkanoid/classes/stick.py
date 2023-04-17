@@ -7,7 +7,8 @@ class Stick(Sprite):
     def __init__(self, image, game_config):
         super().__init__()
         self.stick_config = game_config.get_stick_config()
-        self.screen = game_config.screen
+        self.gc = game_config
+        self.screen = self.gc.screen
         self.image = image
         self.pos = self.stick_config["init_position"]
         self.prev_pos = self.pos
@@ -27,17 +28,10 @@ class Stick(Sprite):
             self.pos.x - self.image_w / 2, 
             self.pos.y - self.image_h / 2)
     
-    def move(self, horizontal_limits):
+    def move(self):
         displacement = self.get_displacement()
         self.pos += displacement
-
-        if self.pos.x - (self.image_w/2) <= horizontal_limits[0]:
-                self.pos.x = horizontal_limits[0] + (self.image_w/2) + 1
-                self.direction.x = 0
-        elif self.pos.x + (self.image_w/2) >= horizontal_limits[1]:
-                self.pos.x = horizontal_limits[1] - (self.image_w/2) - 1
-                self.direction.x = 0
-
+        self.check_screen_limits()
         self.update_rect()
         self.screen.blit(self.image, self.rect)
 
@@ -54,6 +48,14 @@ class Stick(Sprite):
         elif factor <= -1:
             return -1
         else: return factor
+    
+    def check_screen_limits(self):
+        if self.pos.x - (self.image_w/2) <= self.gc.get_screen_limits_rect().left:
+            self.pos.x = self.gc.get_screen_limits_rect().left + (self.image_w/2)
+        elif self.pos.x + (self.image_w/2) >= self.gc.get_screen_limits_rect().right:
+            self.pos.x = self.gc.get_screen_limits_rect().right - (self.image_w/2)
+            
+         
 
 
     
