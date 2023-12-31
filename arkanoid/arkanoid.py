@@ -3,9 +3,10 @@ import pygame
 from arkanoid.classes.ball import Ball
 from arkanoid.classes.wall import Wall
 from arkanoid.classes.stick import Stick
+from arkanoid.classes.level import Level
 from arkanoid.classes.game_config import GameConfig
 from pygame.sprite import Group
-
+from pytmx.util_pygame import load_pygame
 
 def start():
     global hit_wall, brick_wall_image, brick_wall_hit_image, sprite_group, ball, gc
@@ -14,13 +15,16 @@ def start():
     pygame.init()
     gc = GameConfig()
     screen = gc.screen
-
+    
     brick_wall_image = pygame.image.load(getResource(["images", "sprites", "brick_tile.png"])).convert_alpha()
     brick_wall_hit_image = pygame.image.load(getResource(["images", "sprites", "brick_tile_hit.png"])).convert_alpha()
     hit_wall = pygame.mixer.Sound(getResource(["sounds","pickupCoin.wav"]))
     stick_image = pygame.image.load(getResource(["images", "sprites", "stick_128_32.png"])).convert_alpha()
-    ball = Ball(gc)
+    ball_image = pygame.image.load(getResource(["images", "Balls", "Shiny", "Ball.png"])).convert_alpha()
+    level = load_pygame(getResource(["images", "maps", "level.tmx"]))
+    ball = Ball(ball_image, gc)
     stick = Stick(stick_image, gc)
+    level = Level(screen, level)
     sprite_group = Group()
 
     add_walls_to_group()
@@ -42,9 +46,12 @@ def start():
 
         draw_wall(screen)
     
-        ball.move()
+        ball.move(level=level)
         stick.move()
+        level.blit()
         check_ball_stick_collision(ball, stick, screen)
+        # if level.check_collision(ball):
+        #     ball.handle_collision()
 
         pygame.display.flip()
         clock.tick(gc.FPS) 

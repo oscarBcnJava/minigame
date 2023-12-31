@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="1">
+ <tileset firstgid="1" name="images" tilewidth="128" tileheight="32" tilecount="20" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <properties>
+    <property name="breakable" type="bool" value="false"/>
+    <property name="live" type="int" value="1"/>
+   </properties>
+   <image width="128" height="32" source="../bricks/Bump Large.png"/>
+  </tile>
+  <tile id="1">
+   <image width="64" height="32" source="../bricks/BumpSmall.png"/>
+  </tile>
+  <tile id="2">
+   <image width="64" height="32" source="../bricks/Colored_Blue_Block-64x32.png"/>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="breakable" type="bool" value="true"/>
+    <property name="live" type="int" value="1"/>
+   </properties>
+   <image width="64" height="32" source="../bricks/Colored_Blue-64x32.png"/>
+  </tile>
+  <tile id="4">
+   <image width="128" height="32" source="../bricks/Colored_Blue-128x32.png"/>
+  </tile>
+  <tile id="5">
+   <image width="64" height="32" source="../bricks/Colored_Green_Block-64x32.png"/>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="breakable" type="bool" value="true"/>
+    <property name="live" type="int" value="4"/>
+   </properties>
+   <image width="64" height="32" source="../bricks/Colored_Green-64x32.png"/>
+  </tile>
+  <tile id="7">
+   <image width="128" height="32" source="../bricks/Colored_Green-128x32.png"/>
+  </tile>
+  <tile id="8">
+   <image width="64" height="32" source="../bricks/Colored_Orange_Block-64x32.png"/>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="breakable" type="bool" value="true"/>
+    <property name="live" type="int" value="2"/>
+   </properties>
+   <image width="64" height="32" source="../bricks/Colored_Orange-64x32.png"/>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="type" value="2"/>
+   </properties>
+   <image width="128" height="32" source="../bricks/Colored_Orange-128x32.png"/>
+  </tile>
+  <tile id="11">
+   <image width="64" height="32" source="../bricks/Colored_Purple_Block-64x32.png"/>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="breakable" type="bool" value="true"/>
+    <property name="live" value="4"/>
+   </properties>
+   <image width="64" height="32" source="../bricks/Colored_Purple-64x32.png"/>
+  </tile>
+  <tile id="13">
+   <image width="128" height="32" source="../bricks/Colored_Purple-128x32.png"/>
+  </tile>
+  <tile id="14">
+   <image width="64" height="32" source="../bricks/Colored_Red_Block-64x32.png"/>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="breakable" type="bool" value="true"/>
+    <property name="live" type="int" value="3"/>
+   </properties>
+   <image width="64" height="32" source="../bricks/Colored_Red-64x32.png"/>
+  </tile>
+  <tile id="16">
+   <image width="128" height="32" source="../bricks/Colored_Red-128x32.png"/>
+  </tile>
+  <tile id="17">
+   <image width="64" height="32" source="../bricks/Colored_Yellow_Block-64x32.png"/>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="breakable" type="bool" value="true"/>
+    <property name="live" value="1"/>
+   </properties>
+   <image width="64" height="32" source="../bricks/Colored_Yellow-64x32.png"/>
+  </tile>
+  <tile id="19">
+   <image width="128" height="32" source="../bricks/Colored_Yellow-128x32.png"/>
+  </tile>
+ </tileset>
+ <layer id="12" name="bricks" width="30" height="20" offsetx="1" offsety="1">
+  <properties>
+   <property name="test" value="1"/>
+  </properties>
+  <data encoding="base64">
+   AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcAAAAAAAAABwAAAAAAAAAHAAAAAAAAAAcAAAAAAAAABwAAAAAAAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAACgAAAAAAAAAKAAAAAAAAAAoAAAAAAAAACgAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  </data>
+ </layer>
+</map>
